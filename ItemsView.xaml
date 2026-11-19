@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OrientationStateTriggerLeakRepro.ItemsView">
+    <ContentView.Resources>
+        <Color x:Key="ItemColor">DarkGreen</Color>
+        <DataTemplate x:Key="PortraitTemplate">
+            <Label Text="{Binding ., StringFormat='Portrait item {0}'}" TextColor="{StaticResource ItemColor}" />
+        </DataTemplate>
+        <DataTemplate x:Key="LandscapeTemplate">
+            <Label Text="{Binding ., StringFormat='Landscape item {0}'}" TextColor="Blue" />
+        </DataTemplate>
+    </ContentView.Resources>
+
+    <!-- Same pattern as a real app toolbar: the orientation states swap a DataTemplate declared in this view's resources. -->
+    <VerticalStackLayout x:Name="Items" BindableLayout.ItemTemplate="{StaticResource PortraitTemplate}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="OrientationStates">
+                    <VisualState x:Name="Portrait">
+                        <VisualState.StateTriggers>
+                            <OrientationStateTrigger Orientation="Portrait" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="BindableLayout.ItemTemplate" Value="{StaticResource PortraitTemplate}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Landscape">
+                        <VisualState.StateTriggers>
+                            <OrientationStateTrigger Orientation="Landscape" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Property="BindableLayout.ItemTemplate" Value="{StaticResource LandscapeTemplate}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </VisualStateManager.VisualStateGroups>
+    </VerticalStackLayout>
+</ContentView>
